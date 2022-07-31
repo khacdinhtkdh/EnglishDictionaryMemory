@@ -1,7 +1,7 @@
 import random
 import sys
 import sqlite3
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QRadioButton
 from playsound import playsound
 from mainui import Ui_mainWindow
@@ -154,8 +154,18 @@ def excepthook(exc_type, exc_value, exc_tb):
     print("error message:\n", tb)
     QtWidgets.QApplication.quit()
 
+def iconFromBase64(base64):
+    pixmap = QtGui.QPixmap()
+    pixmap.loadFromData(QtCore.QByteArray.fromBase64(base64))
+    icon = QtGui.QIcon(pixmap)
+    return icon
+
+base_icon = b'iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAADUklEQVR4nO3dTUgUYRzH8d+ztkpqppViQUQgKEWXgk4l1kEyoTYlLQiMSk/lrS6BBHrqKp2WCCSMwJcOekiijKgIeqGTLVtUFKZZse6uL9uu83QqMHLNfZ71rzu/z3XcZx/ny8w8u+MgQEREbqWkJ5CqqfpLejneJ6/3alr3kSedg9PiGEAYAwhjAGEMIGyN7QErR8brtPK0KegKR6mcdC0hpsuL0zTyfPsDE0lXW4/Ki41+RWsBaoLBgqgufKI1dgKAhlq9a9xlZCVATTBYENFFH5TWRTbGcxMr14BoovApd35qjANUjozXwYMdNibjRsYBtPK02ZiIW5mfgpSusDAP17IQwJNtYR6uZR5Aa642DfCTsDAGEMYAwhhAGAMIYwBhDCCMAYQxgDAGEMYAwqzfE/5fVRtypd56ReERIIwBhDGAMAYQxgDCGEAYAwhjAGEMIIwBhDGAMAYQxgDCGEAYAwhjAGEMIEzsjtjwj2mj17damoc0HgHCMj6AVgrPD1TjcvcALvbdw/DRBjhZWdLT+sP44YrFHmROl75FHtSOe7Px+LAP/S2t+FRWPm9b6cf3qL3pR/XtLnhjsaTj1AUmkm43fVA74wLM5OXjfv1J3Dl7Ht9LtyQdY/23CRy6dQO1XX7kh0P//BkGWMDfAUKbinH3xGkMNrUgWlC4pLHWTkVxsLcbvuvXsHFsdN42BljA7wBj27Zj8NQ5DDU2IZ6TYzSmN/4T+wb74fN3YuvbAID0BxBbhpp6s3sv+psv4EVVNRyPnbVE3JuNB75GPDxyHHuGh3DM32ll3GRW7RGwUpgeARm/DF3pGEAYAwhjAGEMIIwBhDGAMAYQxgDCGEAYAwhjAGEMIIwBhDGAMLs3ZOY0QtEYvkRimJydQ9xxrA6fiawFiM8k8Gp0ErE5V9+fWTIrAeKzCTz7HILmvl8y82uAA7weDXPnp8g4QGRqFjMJnutTZRxgLJz8L8soOeNrQPOuzVEA+Rbmsiq1G77ewucAxbO/AfN/4AD9zsZE3Mo4gFIYsDERtzIOkJVwOgEVsTEZNzIOcKV03VetcQYArwUpsPJlXEdJbo/WqgFA2MZ4bmLt29COktyeRMIpU0C7Bl4CiNoam4iIiIiIiIgyxS96Wto1qujZAwAAAABJRU5ErkJggg=='
+
 sys.excepthook = excepthook
 e = ErrorApp()
 app = QtWidgets.QApplication(sys.argv)
+icon = iconFromBase64(base_icon)
+app.setWindowIcon(icon)
 MainWindow = Main()
 sys.exit(app.exec())
