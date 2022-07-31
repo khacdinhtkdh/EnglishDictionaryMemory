@@ -109,6 +109,8 @@ class Ui_mainWindow(object):
     def retranslateUi(self, mainWindow):
         _translate = QtCore.QCoreApplication.translate
         mainWindow.setWindowTitle(_translate("mainWindow", "WordNote"))
+        self.lineEdit_en.setPlaceholderText(_translate("mainWindow", "English"))
+        self.lineEdit_vi.setPlaceholderText(_translate("mainWindow", "Tiếng Việt"))
         self.btn_audio.setText(_translate("mainWindow", "Audio"))
         self.btn_add.setText(_translate("mainWindow", "Add"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("mainWindow", "Add New"))

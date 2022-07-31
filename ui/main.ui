@@ -36,10 +36,17 @@
           <property name="inputMethodHints">
            <set>Qt::ImhNone</set>
           </property>
+          <property name="placeholderText">
+           <string>English</string>
+          </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_vi"/>
+         <widget class="QLineEdit" name="lineEdit_vi">
+          <property name="placeholderText">
+           <string>Tiếng Việt</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="btn_audio">
