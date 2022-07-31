@@ -4,7 +4,7 @@ import sqlite3
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QRadioButton
 from playsound import playsound
-from mainui import Ui_MainWindow
+from mainui import Ui_mainWindow
 import pygame.mixer as mixer
 mixer.init()
 
@@ -42,7 +42,7 @@ class DBQSqllite():
         self.con.commit()
         return res
 
-class Main(QMainWindow, Ui_MainWindow):
+class Main(QMainWindow, Ui_mainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
