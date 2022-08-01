@@ -65,6 +65,8 @@ class Main(QMainWindow, Ui_mainWindow):
         self.list_rb = [self.rb_1, self.rb_2, self.rb_3, self.rb_4]
 
     def show_list(self):
+        self.data = self.db.getDatabase()
+        self.listWidget.clear()
         for word in self.data:
             self.listWidget.addItem(word[0])
 
@@ -100,6 +102,8 @@ class Main(QMainWindow, Ui_mainWindow):
             text = str(random.choice(rb))
             srb.setText(text)
             rb.remove(srb.text())
+
+        self.play_audio()
 
     def check_answer(self):
         # id = self.find_checked_radiobutton(self.buttonGroup)
