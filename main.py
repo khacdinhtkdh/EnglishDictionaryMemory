@@ -37,6 +37,11 @@ class DBQSqlite:
         self.cur.execute(sqlite_query, val)
         self.con.commit()
 
+    def get_data(self, val):
+        sqlite_query = "SELECT * FROM dic WHERE en = '{}'".format(val)
+        res = self.cur.execute(sqlite_query).fetchall()
+        return res
+
     def get_database(self):
         self.cur.execute(f'SELECT * from {TABLE_NAME}')
         res = self.cur.fetchall()
@@ -78,12 +83,21 @@ class Main(QMainWindow, Ui_mainWindow):
         self.btn_check.clicked.connect(self.check_answer)
         self.btn_play.clicked.connect(play_audio)
         self.tabWidget.currentChanged.connect(self.on_tab_change)
+        self.listWidget.itemClicked.connect(self.handle_item_selected)
 
         self.db = DBQSqlite()
         self.data = self.db.get_database()
         self.random_id()
 
         self.list_rb = [self.rb_1, self.rb_2, self.rb_3, self.rb_4]
+
+    def handle_item_selected(self, item):
+        val = item.text()
+        print(val)
+        data = self.db.get_data(val)[0]
+        self.label.setText(str(data[1]))
+        write_audio_file(data[2])
+        play_audio()
 
     def show_list(self):
         self.data = self.db.get_database()
