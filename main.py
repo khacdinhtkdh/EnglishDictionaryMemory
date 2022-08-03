@@ -3,9 +3,12 @@ import sys
 import sqlite3
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QMainWindow, QFileDialog
+
+import getaudiofile
 from mainui import Ui_mainWindow
 import pygame.mixer as mixer
 
+from subprocess import CREATE_NO_WINDOW
 mixer.init()
 
 DB_CREATE_TB = '''CREATE TABLE {} {}'''
@@ -77,7 +80,7 @@ class Main(QMainWindow, Ui_mainWindow):
         self.id = 0
         self.vi = ""
         self.list_random = list()
-        self.btn_audio.clicked.connect(self.get_audio_file)
+        self.btn_audio.clicked.connect(self.auto_get_audio_file)
         self.btn_add.clicked.connect(self.add_dictionary)
         self.btn_next.clicked.connect(self.random_id)
         self.btn_check.clicked.connect(self.check_answer)
@@ -166,6 +169,14 @@ class Main(QMainWindow, Ui_mainWindow):
         path = QFileDialog.getOpenFileName(self, "", "", '*.mp3')
         if path[0]:
             with open(path[0], 'rb') as file:
+                self.audio_text = file.read()
+                file.close()
+
+    def auto_get_audio_file(self):
+        word = self.lineEdit_en.text()
+        if getaudiofile.download_mp3(word):
+            print('ok')
+            with open('download.mp3', 'rb') as file:
                 self.audio_text = file.read()
                 file.close()
 
