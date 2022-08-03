@@ -21,6 +21,8 @@ def download_mp3(word):
             attr = f.attrs['src']
             if 'us_pron' in attr and 'mp3' in attr:
                 ld = attr
+        if ld is not None:
+            break
     if ld is None:
         return False
     with requests.Session() as req:

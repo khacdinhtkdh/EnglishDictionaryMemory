@@ -2,7 +2,7 @@ import random
 import sys
 import sqlite3
 from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtWidgets import QMainWindow, QFileDialog
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
 import getaudiofile
 from mainui import Ui_mainWindow
@@ -80,7 +80,7 @@ class Main(QMainWindow, Ui_mainWindow):
         self.id = 0
         self.vi = ""
         self.list_random = list()
-        self.btn_audio.clicked.connect(self.auto_get_audio_file)
+        # self.btn_audio.clicked.connect(self.auto_get_audio_file)
         self.btn_add.clicked.connect(self.add_dictionary)
         self.btn_next.clicked.connect(self.random_id)
         self.btn_check.clicked.connect(self.check_answer)
@@ -174,6 +174,7 @@ class Main(QMainWindow, Ui_mainWindow):
 
     def auto_get_audio_file(self):
         word = self.lineEdit_en.text()
+        self.audio_text = None
         if getaudiofile.download_mp3(word):
             print('ok')
             with open('download.mp3', 'rb') as file:
@@ -184,8 +185,23 @@ class Main(QMainWindow, Ui_mainWindow):
         en = self.lineEdit_en.text()
         vi = self.lineEdit_vi.text()
         val = (en, vi, self.audio_text)
+        data = self.db.get_data(en)
+        if len(data) > 0:
+            print('exist', en)
+            return
         print(en, vi)
+        self.auto_get_audio_file()
+        if self.audio_text is None:
+            print('can not download mp3')
+            QMessageBox.about(self, 'Insert', f'can not download {en} audio')
+            return
+        val = (en, vi, self.audio_text)
         self.db.insert(val)
+        data = self.db.get_data(en)
+        if len(data) > 0:
+            print('insert success')
+            QMessageBox.about(self, 'Insert', f'insert {en} success')
+
 
 
 def raise_error():

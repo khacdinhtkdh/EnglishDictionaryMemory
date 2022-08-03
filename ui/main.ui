@@ -49,13 +49,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btn_audio">
-          <property name="text">
-           <string>Audio</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="btn_add">
           <property name="text">
            <string>Add</string>
@@ -166,7 +159,7 @@
        <attribute name="title">
         <string>List</string>
        </attribute>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
