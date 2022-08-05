@@ -122,12 +122,12 @@ class Main(QMainWindow, Ui_mainWindow):
     def make_list_random(self):
         self.data = self.db.get_database()
         for i in range(len(self.data)):
-            for k in range(5):
+            for k in range(3):
                 self.list_random.append(i)
 
     def random_id(self):
         self.reset_rb()
-        if len(self.data) == 0:
+        if len(self.data) < 4:
             return
         if len(self.list_random) == 0:
             self.make_list_random()
