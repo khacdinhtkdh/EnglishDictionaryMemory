@@ -13,7 +13,8 @@ headers.update(
 
 def download_mp3(word):
     ld = None
-    r = requests.get(link+word, headers=headers)
+    pro = ""
+    r = requests.get(link + word, headers=headers)
     soup = BeautifulSoup(r.content, 'html.parser')
     for a in soup.find_all('amp-audio'):
         filename = a.find_all('source')
@@ -24,7 +25,13 @@ def download_mp3(word):
         if ld is not None:
             break
     if ld is None:
-        return False
+        return False, pro
+
+    for a in soup.find_all(class_="pron dpron"):
+        if 'us' in a.parent.text:
+            pro = a.text
+            break
+
     with requests.Session() as req:
         download = req.get(cambride + ld, headers=headers)
         if download.status_code == 200:
@@ -33,5 +40,14 @@ def download_mp3(word):
                 f.close()
         else:
             print(f"Download Failed For File")
-            return False
-    return True
+            return False, pro
+    return True, pro
+
+
+def download_pron_dpron(word):
+    r = requests.get(link + word, headers=headers)
+    soup = BeautifulSoup(r.content, 'html.parser')
+    for a in soup.find_all(class_="pron dpron"):
+        if 'us' in a.parent.text:
+            return a.text
+    return ""

@@ -89,6 +89,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QLabel" name="lb_pro">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="rb_1">
           <property name="text">
            <string>RadioButton</string>

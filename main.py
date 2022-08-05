@@ -4,7 +4,7 @@ import sqlite3
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
-import getaudiofile
+import getdata
 from mainui import Ui_mainWindow
 import pygame.mixer as mixer
 
@@ -30,13 +30,13 @@ class DBQSqlite:
             AND name='dic'; """).fetchall()
         if not list_of_tables:
             print('Table not found!')
-            val = '(en text, vi text, audio BLOB)'
+            val = '(en text, vi text, audio BLOB, pro text)'
             self.cur.execute(DB_CREATE_TB.format('dic', val))
         else:
             print('Table found!')
 
     def insert(self, val):
-        sqlite_query = "INSERT INTO dic (en, vi, audio) VALUES (?, ?, ?)"
+        sqlite_query = "INSERT INTO dic (en, vi, audio, pro) VALUES (?, ?, ?, ?)"
         self.cur.execute(sqlite_query, val)
         self.con.commit()
 
@@ -79,6 +79,7 @@ class Main(QMainWindow, Ui_mainWindow):
         self.audio_text = None
         self.id = 0
         self.vi = ""
+        self.pro = ""
         self.list_random = list()
         # self.btn_audio.clicked.connect(self.auto_get_audio_file)
         self.btn_add.clicked.connect(self.add_dictionary)
@@ -98,7 +99,7 @@ class Main(QMainWindow, Ui_mainWindow):
         val = item.text()
         print(val)
         data = self.db.get_data(val)[0]
-        self.label.setText(str(data[1]))
+        self.label.setText(str(data[1]) + " " + str(data[3]))
         write_audio_file(data[2])
         play_audio()
 
@@ -134,10 +135,12 @@ class Main(QMainWindow, Ui_mainWindow):
         self.id = random.choice(self.list_random)
         self.list_random.remove(self.id)
         en = self.data[self.id][0]
+        pro = self.data[self.id][3]
         self.vi = self.data[self.id][1]
         write_audio_file(self.data[self.id][2])
 
         self.label_en.setText(en)
+        self.lb_pro.setText(pro)
 
         rb = [self.vi]
         id_rb = [self.id]
@@ -175,7 +178,8 @@ class Main(QMainWindow, Ui_mainWindow):
     def auto_get_audio_file(self):
         word = self.lineEdit_en.text()
         self.audio_text = None
-        if getaudiofile.download_mp3(word):
+        res, self.pro = getdata.download_mp3(word)
+        if res:
             print('ok')
             with open('download.mp3', 'rb') as file:
                 self.audio_text = file.read()
@@ -184,18 +188,18 @@ class Main(QMainWindow, Ui_mainWindow):
     def add_dictionary(self):
         en = self.lineEdit_en.text()
         vi = self.lineEdit_vi.text()
-        val = (en, vi, self.audio_text)
         data = self.db.get_data(en)
         if len(data) > 0:
             print('exist', en)
             return
         print(en, vi)
         self.auto_get_audio_file()
+
         if self.audio_text is None:
             print('can not download mp3')
             QMessageBox.about(self, 'Insert', f'can not download {en} audio')
             return
-        val = (en, vi, self.audio_text)
+        val = (en, vi, self.audio_text, self.pro)
         self.db.insert(val)
         data = self.db.get_data(en)
         if len(data) > 0:
